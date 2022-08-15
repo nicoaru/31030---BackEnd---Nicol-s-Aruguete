@@ -1,7 +1,6 @@
 const express = require("express")
 const { Router } = express
 const Contenedor = require("./utils/Contenedor");
-const Carritos = require("./utils/Carritos");
 
 
 // server y router
@@ -21,7 +20,7 @@ let admin = true
 
 // instancias de Contenedor
 const productos = new Contenedor("productos.txt")
-const carritos = new Carritos("carritos.txt")
+const carritos = new Contenedor("carritos.txt")
 
 // middlewares
 const isAdmin = (req, res, next) => {
@@ -101,6 +100,7 @@ routerProductos.delete("/:id", isAdmin, async (req, res) => {
     res.json(await productos.deleteById(id))
 })
 
+
 // API/CARRITO
 // crea un carrito nuevo. devuelve el id asignado o mensaje de error
 routerCarrito.post("/", (req, res) => {
@@ -145,7 +145,7 @@ routerCarrito.post("/:id/productos", (req, res) => {
     const idCarrito = parseInt(req.params.id)
     const product = {...req.body}
 
-    carritos.addToCart(product, idCarrito)
+    carritos.addToItemArray(product, idCarrito, "productos")
     .then( data => {
         res.json(data)
     })
@@ -163,7 +163,7 @@ routerCarrito.delete("/:id/productos/:id_prod", (req, res) => {
     const idCarrito = parseInt(req.params.id)
     const idProd = parseInt(req.params.id_prod)
     
-    carritos.deleteFromCart(idProd, idCarrito)
+    carritos.deleteFromItemArray(idProd, idCarrito, "productos")
     .then(data => res.json(data))
     .catch(error => {
         console.log(error.message)
@@ -173,6 +173,9 @@ routerCarrito.delete("/:id/productos/:id_prod", (req, res) => {
         }
     })
 })
+
+
+
 
 // ruta no existente
 app.use(function(req, res, next) {

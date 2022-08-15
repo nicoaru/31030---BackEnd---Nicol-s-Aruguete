@@ -144,6 +144,78 @@ class Contenedor {
             }
         })
     }
+
+// METODOS QUE ACTUAN SOBRE ARRAY DE UN ITEM
+    // agrega un producto a un carrito determinado
+    addToItemArray(product, cartId, arrayName) {
+        const fileName = this.fileName;
+        return new Promise(async (resolve, reject) => {
+            try {
+                let cartsList;
+
+                await this.getAll()
+                .then(data => cartsList = data)
+                .catch(error => {throw error});
+
+                const cartIndex = cartsList.indexOf(cartsList.find(obj => {if (obj.id === cartId) {return obj}}));
+
+                if (cartIndex >= 0) {
+                    cartsList[cartIndex][arrayName].push(product)
+                    await fs.promises.writeFile(`./${fileName}`, JSON.stringify(cartsList, null, 2), "utf-8")
+                    console.log(`Se agregó el producto con id ${product.id} al carrito ${cartId}`)
+                    resolve({mensaje:`Se agregó el producto con id ${product.id} al carrito ${cartId}`, carrito: cartId, productos: cartsList[cartIndex][arrayName]})
+                }
+                else if (cartIndex < 0) { 
+                    console.log(`No existe carrito con Id ${cartId}`)
+                    const error = Error(`No existe carrito con Id ${cartId}`)
+                    error.httpStatusCode = 400
+                    console.log(error)
+                    reject(error)
+                };
+            }
+            catch(error) {
+                console.log("Error => ", error)
+                reject(error)
+            }
+        })
+    }
+
+    // elimina un producto de un carrito determinado
+    deleteFromItemArray(productId, cartId, arrayName) {
+        const fileName = this.fileName;
+        return new Promise(async (resolve, reject) => {
+            try {
+                let cartsList;
+
+                await this.getAll()
+                .then(data => cartsList = data)
+                .catch(error => {throw error});
+
+                const cartIndex = cartsList.indexOf(cartsList.find(obj => {if (obj.id === cartId) {return obj}}));
+                
+                const productIndex = cartsList[cartIndex][arrayName].indexOf(cartsList[cartIndex][arrayName].find(obj => {if (obj.id === productId) {return obj}}));
+                
+                if (productIndex >= 0) {
+                    cartsList[cartIndex][arrayName].splice(productIndex, 1)
+                    await fs.promises.writeFile(`./${fileName}`, JSON.stringify(cartsList, null, 2), "utf-8")
+                    console.log(`Se eliminó el producto con id ${productId} del carrito ${cartId}`)
+                    resolve({mensaje:`Se eliminó el producto con id ${productId} del carrito ${cartId}`, carrito: cartId, productos: cartsList[cartIndex][arrayName]})
+                }
+                else if (productIndex < 0) { 
+                    console.log(`No hay producto con Id ${productId} en el carrito ${cartId}`)
+                    const error = Error(`No hay producto con Id ${productId} en el carrito ${cartId}`)
+                    error.httpStatusCode = 400
+                    console.log(error)
+                    reject(error)
+                };
+            }
+            catch(error) {
+                console.log("Error => ", error)
+                reject(error)
+            }
+        })
+    }
+    
 }
 
 module.exports = Contenedor;
