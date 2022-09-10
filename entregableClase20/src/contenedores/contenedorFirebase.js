@@ -1,42 +1,68 @@
-import mongoose from "mongoose";
-import {uriStringMongo} from '../config.js'
+import firebase from "firebase-admin";
+import {serviceAccountFirebase} from '../config.js';
 
-class ContenedorMongoDB {
-    constructor(model) {
-        this.model = model;
-        this.uriString = uriStringMongo
-    }
+
+class ContenedorFirebase {
+    constructor(collection) {
+        this.collectionNameString = collection
+        this.db
+        this.collectionRef
+    }  
 
     // connect to DB
     connect() {
-        mongoose.connect(this.uriString)
-        .then(res => console.log(`Respuesta conexión DB => conectado a ${res.connections[0]._connectionString}`))
-        .catch(error => console.log("Error de conexión a DB => ", error.message))
+        try{
+            const firebaseApp = firebase.initializeApp({
+                credential: firebase.credential.cert(serviceAccountFirebase),
+                databaseURL: "https://proyecto-Backend-Coderhouse.firebaseio.com"
+            })
+            console.log(`Respuesta conexión DB => conectado a`, firebaseApp.options_.credential.projectId)            
+        }
+        catch(error){
+            console.log(`Respuesta conexión DB => ${error.message}`,)
+        }
+
+
     }
+    //initialize firestore and get DB reference
+    initFirestore() {
+        try{
+            this.db = firebase.firestore()
+        }
+        catch(error){
+        console.log("Error dbRef => ", error.message)            
+        } 
+    } 
+    //get collection reference
+    getCollectionRef() {
+        try{
+            this.collectionRef = this.db.collection(this.collectionNameString);
+        }
+        catch(error){
+        console.log("Error collectionRef => ", error.message)            
+        }
+    }
+    
+
     // devuelve la lista de objetos almacenados
     getAll() {
-        return this.model.find()
+        return this.collectionRef.get()
     }
     //Guarda un nuevo producto en el archivo
     save(object) {
-        const _object = new this.model(object)
-        return _object.save()  
+        return this.collectionRef.add(object)
     }
     // Devuelve el objeto con el id indicado
-    getById(id) {
-        return this.model.findOne({_id: id})
+    getById(docRef) {
+        return docRef.get()
     }
     // elimina el objeto con el id indicado
-    deleteById(id) {
-        return this.model.deleteOne({_id:id})
-    }
-    // elimina todos los objetos
-    deleteAll() {
-        return this.model.deleteMany()
+    deleteById(docRef) {
+        return docRef.delete()
     }
     // actualiza el objeto con el id indicado
-    updateById(updatedObject, id) {
-        return this.model.findOneAndUpdate({_id: id}, updatedObject, {returnDocument:'after'})
+    updateById(updatedObject, docRef) {
+        return docRef.update(updatedObject)
     }
 }
-export {ContenedorMongoDB}
+export {ContenedorFirebase}
