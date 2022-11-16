@@ -752,5 +752,5 @@
 {"level":"warn","message":"Ruta /session - método DELETE - no existe"}
 {"level":"warn","message":"Ruta /item/index.css - método GET - no existe"}
 {"level":"warn","message":"Ruta /undefined - método GET - no existe"}
-{"level":"warn","message":"Ruta /undefined - método GET - no existe"}
+{"level":"warn","message":"Ruta / - método GET - no existe"}
 {"level":"warn","message":"Ruta /undefined - método GET - no existe"}

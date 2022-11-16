@@ -13,7 +13,7 @@ const {generateDataProducts} = require('./utils/fakeDataGenerator.js')
 const session = require('express-session')
 const MongoStore = require('connect-mongo') //conecta express-session a mongoDB
 const {uriStringMongo} = require('./config.js')
-
+const {sendMail} = require('./nodeMailer.js')
 
 
 const {logger, logEndpoint} = require("./logger_config.js");
@@ -49,7 +49,6 @@ app.use("/api/productos", routerProductos)
 app.use("/api/carritos", routerCarritos)
 
 
-// '/'
 
 // '/session'
 app.get('/session', isLogged, (req, res) => {

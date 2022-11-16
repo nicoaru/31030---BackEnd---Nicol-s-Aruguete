@@ -93,7 +93,7 @@ function Signup() {
 
                 {/* <!-- Input username --> */}
                 <div className="input-group mb-3">
-                    <input type="text" required className="form-control" placeholder="username" name="name" value={newUser.name} aria-label="" onChange={(e) => onChange(e)}/>
+                    <input type="text" required className="form-control" placeholder="Nombre" name="name" value={newUser.name} aria-label="" onChange={(e) => onChange(e)}/>
                 </div>
 
                 {/* <!-- Input password --> */}

@@ -1,11 +1,12 @@
 const { createHash, validateEmail } = require('./utils/utils.js')
 const {UsersDAO} = require('./daos/daos.js')
+const {CarritosDAO} = require('./daos/daos.js')
+const {sendMail} = require('./nodeMailer')
 
 const postSignup = async (req, res) => {
     console.log("Entró en POST /signup")
     try {
         let _user = await UsersDAO.getByFilter({$or: [{ username: req.body.username }, { email: req.body.email }]})
-        // console.log(`line 127 . _user => `, _user)
         console.log("body ", req.body)
         console.log("_user ", _user)
 
@@ -24,14 +25,28 @@ const postSignup = async (req, res) => {
         else {
             _newUser = {
                 username: req.body.username, 
+                name: req.body.name,
                 password: createHash(req.body.password),
                 email: req.body.email, 
                 telephone: req.body.telephone, 
-                avatar: req.body.avatar
+                address: req.body.address,
+                imgurl: req.body.imgurl
             }
             UsersDAO.save(_newUser)
-            .then(user => {
+            .then(async user => {
                 console.log(`usuario creado => `, user)
+                CarritosDAO.save({userId: user._id})
+
+
+                const emailSubject = "Nuevo resgitro"
+                const emailHtmlBody = `<h3>Nombre: ${user.name}</h3>
+                                        <h3>Usuario: ${user.username}</h3>
+                                        <h3>Email: ${user.email}</h3>
+                                        <h3>Teléfono: ${user.telephone}</h3>
+                                        <h3>Dirección: ${user.address}</h3>
+                                        <h3>Avatar: <img src="${user.imgurl}" alt="imagen de usuario" width="100px"/> </h3>`
+                const adminEmailResult = await sendMail(emailSubject, emailHtmlBody)
+                console.log("Signup admin notification result ", adminEmailResult)
                 res.status(200).json(user)
             })
             .catch(error => {
