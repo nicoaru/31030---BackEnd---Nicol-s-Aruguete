@@ -6,7 +6,7 @@ const {sendMail} = require('./nodeMailer')
 const postSignup = async (req, res) => {
     console.log("Entró en POST /signup")
     try {
-        let _user = await UsersDAO.getByFilter({$or: [{ username: req.body.username }, { email: req.body.email }]})
+        let _user = await UsersDAO.getOneByFilter({$or: [{ username: req.body.username }, { email: req.body.email }]})
         console.log("body ", req.body)
         console.log("_user ", _user)
 

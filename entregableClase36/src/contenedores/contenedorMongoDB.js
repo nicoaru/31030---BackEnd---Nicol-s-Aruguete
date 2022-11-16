@@ -34,6 +34,9 @@ class ContenedorMongoDB {
     }
     // Devuelve el objeto que cumple el filtro
     getByFilter(filterObj) {
+        return this.model.find(filterObj)
+    }
+    getOneByFilter(filterObj) {
         return this.model.findOne(filterObj)
     }
     // elimina el objeto con el id indicado

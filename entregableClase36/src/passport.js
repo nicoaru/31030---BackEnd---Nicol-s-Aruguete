@@ -11,7 +11,7 @@ passport.use('login', new LocalStrategy( async (username, password, done) => {
     console.log("Entró en passport login")
     try {
         console.log(`line 12 . username: ${username}, password: ${password}`)
-        const _user = await UsersDAO.getByFilter({username: username})
+        const _user = await UsersDAO.getOneByFilter({username: username})
         console.log("line 14 . _user => ", _user)
         if (!_user || !(compareHash(password, _user.password))){
             console.log(`line 16 . No autenticado`)
@@ -32,13 +32,11 @@ passport.use('login', new LocalStrategy( async (username, password, done) => {
 
 
 passport.serializeUser((user, done) => {
-    console.log("seriaizeUser => ", user)
     done(null, user._id);
 });
   
 passport.deserializeUser(async (id, done) => {
     id = Types.ObjectId(id);
     const user = await UsersDAO.getById(id);
-    console.log("deserializeUser => ", user)
     done(null, user);
 });

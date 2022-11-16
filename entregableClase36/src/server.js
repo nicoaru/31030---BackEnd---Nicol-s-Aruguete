@@ -9,6 +9,7 @@ const {MensajesDAO} = require('./daos/daos.js')
 const {ProductosDAO} = require('./daos/daos.js')
 const {routerProductos} = require('./routes/routerProductos.js')
 const {routerCarritos} = require('./routes/routerCarritos.js')
+const {routerPedidos} = require('./routes/routerPedidos.js')
 const {generateDataProducts} = require('./utils/fakeDataGenerator.js')
 const session = require('express-session')
 const MongoStore = require('connect-mongo') //conecta express-session a mongoDB
@@ -47,6 +48,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use("/api/productos", routerProductos)
 app.use("/api/carritos", routerCarritos)
+app.use("/api/pedidos", routerPedidos)
 
 
 

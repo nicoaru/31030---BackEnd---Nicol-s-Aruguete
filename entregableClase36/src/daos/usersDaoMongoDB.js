@@ -5,8 +5,7 @@ const Types = mongoose.Types
 class UsersDaoMongoDB extends ContenedorMongoDB {
   
   constructor(model) {
-    super(model);
-    this.connect()
+    super(model)
   }
 
 }

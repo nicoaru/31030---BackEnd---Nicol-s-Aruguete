@@ -4,27 +4,13 @@ const Types = mongoose.Types
 
 
 
-class ProductosDaoMongoDB extends ContenedorMongoDB {
+class PedidosDaoMongoDB extends ContenedorMongoDB {
     
     constructor(model) {
       super(model)
     }
 
-    getAllProductos(req, res) {
-        console.log("Entró en getAllProductos")
-        this.getAll()
-        .then(data => res.json(data))
-        .catch(error => res.status(400).json(error))
-    }
-
-    saveProducto(req, res) {
-        let producto = req.body
-        this.save(producto)
-        .then(data => res.json(data))
-        .catch(error => res.status(400).json(error.message))
-    }
-
-    getProductoById(req, res) {
+    getPedidoById(req, res) {
         let id = req.params.id
         try{
             id = Types.ObjectId(id)
@@ -39,7 +25,7 @@ class ProductosDaoMongoDB extends ContenedorMongoDB {
 
     }
 
-    updateProductoById(req, res) {
+    updatePedidoById(req, res) {
         let id = req.params.id
         let newObject = req.body
         
@@ -56,7 +42,7 @@ class ProductosDaoMongoDB extends ContenedorMongoDB {
 
     }
 
-    deleteProductoById(req, res) {
+    deletePedidoById(req, res) {
         let id = req.params.id
      
         try {
@@ -70,11 +56,6 @@ class ProductosDaoMongoDB extends ContenedorMongoDB {
         }
     }
 
-    deleteAllProductos(req, res) {
-        this.deleteAll()
-        .then(data => res.json(data))
-        .catch(error => res.status(400).json(error))
-    }
 }
 
-module.exports = { ProductosDaoMongoDB}
+module.exports = {PedidosDaoMongoDB}
