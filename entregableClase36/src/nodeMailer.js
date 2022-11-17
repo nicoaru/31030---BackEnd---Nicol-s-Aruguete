@@ -2,7 +2,6 @@ require("dotenv").config();
 const MY_EMAIL_ADDRESS = process.env.MY_EMAIL_ADDRESS;
 const GMAIL_PASSWORD = process.env.GMAIL_PASSWORD;
 
-const adminEmail = "arunico@gmail.com"
 
 const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
@@ -18,19 +17,11 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const mailOptions = {
-  to: adminEmail,
-  from: MY_EMAIL_ADDRESS,
-  subject: "Correo de prueba con archivos adjuntos",
-  html: "<h1>Bienvenido a Nodemailer con gmail</h1><br><p>Este es el tercer mensaje</p>",
-  attachments: [
-    {path: "./src/bosque.jpg"}
-  ]
-}
 
-async function sendMail(subject, htmlBody) {
+
+async function sendMail(subject, htmlBody, to) {
     const mailOptions = {
-        to: adminEmail,
+        to: to,
         from: MY_EMAIL_ADDRESS,
         subject: subject,
         html: htmlBody

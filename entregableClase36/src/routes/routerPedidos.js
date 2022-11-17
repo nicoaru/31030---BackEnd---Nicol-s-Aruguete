@@ -2,6 +2,7 @@ const { PedidosDAO} = require("../daos/daos.js")
 const { Router } = require("express")
 const {isLogged} = require('../utils/middlewares.js')
 const {sendMail} = require('../nodeMailer.js')
+const {sendSMS, sendWhatsapp} = require('../twilio.js')
 const routerPedidos = Router()
 
 
@@ -25,7 +26,7 @@ routerPedidos.post("/", isLogged, async (req, res) => {
         const result = await PedidosDAO.save(pedido)
         console.log("result => ", result)
 
-        const emailSubject = "Nuevo pedido"
+        const emailSubject = `Nuevo pedido de ${result.nombre} - ${result.email}`
         const emailHtmlBody = `<h3>Nombre: ${result.nombre}</h3>
                                 <h3>Email: ${result.email}</h3>
                                 <h3>Dirección: ${result.direccion}</h3>
@@ -36,8 +37,15 @@ routerPedidos.post("/", isLogged, async (req, res) => {
                                 </h3>
                                 <h3>Total: $${result.precioTotal}</h3>
                                 `
-        const adminEmailResult = await sendMail(emailSubject, emailHtmlBody)
+        const adminEmailResult = await sendMail(emailSubject, emailHtmlBody, process.env.ADMIN_EMAIL)
         console.log("Nuevo pedido admin notification result ", adminEmailResult)
+
+        const whatsappBody = `Nuevo pedido de ${result.nombre} - ${result.email}`
+        
+        const whatsappResp = await sendWhatsapp(whatsappBody, process.env.TWILIO_WHATSAPP_FROM, process.env.ADMIN_TELEPHONE)
+        
+        console.log("whatsappResp ", whatsappResp)
+        
 
         res.status(200).json(result)        
     }
