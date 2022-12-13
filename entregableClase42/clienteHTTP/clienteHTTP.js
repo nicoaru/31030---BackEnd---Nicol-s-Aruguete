@@ -12,25 +12,6 @@ let newProduct = {
 }
 
 
-// const login = new Promise((resolve, reject) => {
-//     const loginData = {
-//         username: 'nicoaru',
-//         password: '1234'
-//     }
-//     client.post('http://localhost:8080/api/users/login', loginData, {headers: {'accept-encoding': '*'}})
-//     .then(res => {
-//         const data = res.data
-//         console.log(data)
-//         resolve(data)
-//     })
-//     .catch(err => {
-//         const data = err.response.data
-//         console.log(data)
-//         resolve(data)     
-//     })    
-
-// }) 
-
 async function login() {
     const loginData = {
         username: 'nicoaru',
