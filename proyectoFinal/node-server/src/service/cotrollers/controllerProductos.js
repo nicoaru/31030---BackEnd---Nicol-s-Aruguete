@@ -1,5 +1,4 @@
 const { ProductosRepository } = require('../../model/repositories/productos.repository.js')
-console.log('ProductosRepository, ', ProductosRepository)
 const mongoose = require("mongoose")
 const Types = mongoose.Types
 

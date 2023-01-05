@@ -70,7 +70,7 @@ const socketServer = new SocketServer(httpServer)
 
 // FUNCIÓN CONECTAR SERVIDOR
 function connectServer (port) {
-    const server = httpServer.listen(port, () => {
+    const server = app.listen(port, () => {
         console.log(`Servidor escuchando en puerto ${server.address().port}. Proceso ${process.pid}`)
     })
     .on("error", error => console.log(`Error conectando al servidor => ${error.message}`))
@@ -82,8 +82,7 @@ function connectServer (port) {
 
 module.exports = {
     connectServer, 
-    socketServer,
-    httpServer
+    socketServer
 }
 
 
